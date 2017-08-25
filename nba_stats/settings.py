@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from datetime import date
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'utils.logging_middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'nba_stats.urls'
@@ -124,3 +126,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGGING = {
+    "version": 1,
+    "formatters": {
+        "json_format": {
+            "format": "%(asctime)s %(levelname)s %(funcName)s %(lineno)d "
+                      "%(pathname)s %(exc_info)s %(msg)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+            "()": "utils.json_log_formatter.PrettyJSONFormatter"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "json_format",
+            "stream": "ext://sys.stdout"
+        }
+    },
+    "root": {
+        "level": "DEBUG",
+        "handlers": [
+            "console"
+        ]
+    }
+}
+
+SEASON_OPENER = date(2017, 10, 17)

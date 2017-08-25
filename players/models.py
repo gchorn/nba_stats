@@ -6,12 +6,6 @@ from django.db import models
 
 getcontext().prec = 3
 
-divisions = { u'MIL': 'Central', u'GSW': 'Pacific', u'MIN': 'Northwest', u'MIA': 'Southeast', u'ATL': 'Southeast', u'BOS': 'Atlantic', u'DET': 'Central', u'NYK': 'Atlantic', u'DEN': 'Northwest', u'SAC': 'Pacific', u'POR': 'Northwest', u'ORL': 'Southeast', u'TOR': 'Atlantic', u'CLE': 'Central', u'SAS': 'Southwest', u'CHO': 'Southeast', u'UTA': 'Northwest', u'CHI': 'Central', u'HOU': 'Southwest', u'NOP': 'Southwest', u'WAS': 'Southeast', u'LAL': 'Pacific', u'PHI': 'Atlantic', u'PHO': 'Pacific', u'MEM': 'Southwest', u'LAC': 'Pacific', u'DAL': 'Southwest', u'OKC': 'Northwest', u'BRK': 'Atlantic', u'IND': 'Central' }
-
-cities = { 'LAL': 'Los Angeles', 'LAC': 'Los Angeles', 'GSW': 'Golden State', 'SAC': 'Sacramento', 'OKC': 'Oklahoma City', 'DAL': 'Dallas', 'MIL': 'Milwaukee', 'UTA': 'Utah', 'MIN': 'Minnesota', 'SAS': 'San Antonio', 'CLE': 'Cleveland', 'CHO': 'Charlotte', 'NOP': 'New Orleans', 'TOR': 'Toronto', 'WAS': 'Washington DC', 'CHI': 'Chicago', 'ORL': 'Orlando', 'MIA': 'Miami', 'DET': 'Detroit', 'PHO': 'Phoenix', 'DEN': 'Denver', 'ATL': 'Atlanta', 'BRK': 'Brooklyn', 'HOU': 'Houston', 'IND': 'Indianapolis', 'NYK': 'New York City', 'BOS': 'Boston', 'PHI': 'Philadelphia', 'POR': 'Portland', 'MEM': 'Memphis' }
-
-NAME_CHOICES = ( (u'LAL', u'Lakers'), (u'LAC', u'Clippers'), (u'GSW', u'Warriors'), (u'SAC', u'Kings'), (u'OKC', u'Thunder'), (u'DAL', u'Mavericks'), (u'MIL', u'Bucks'), (u'UTA', u'Jazz'), (u'MIN', u'Timberwolves'), (u'SAS', u'Spurs'), (u'CLE', u'Cavaliers'), (u'CHO', u'Hornets'), (u'NOP', u'Pelicans'), (u'TOR', u'Raptors'), (u'WAS', u'Wizards'), (u'CHI', u'Bulls'), (u'ORL', u'Magic'), (u'MIA', u'Heat'), (u'DET', u'Pistons'), (u'PHO', u'Suns'), (u'DEN', u'Nuggets'), (u'ATL', u'Hawks'), (u'BRK', u'Nets'), (u'HOU', u'Rockets'), (u'IND', u'Pacers'), (u'NYK', u'Knicks'), (u'BOS', u'Celtics'), (u'PHI', u'76ers'), (u'POR', u'Trail Blazers'), (u'MEM', u'Grizzlies'), )
-
 POSITION_CHOICES = (
     (u'PG', u'Point Guard'),
     (u'SG', u'Shooting Guard'),
@@ -39,8 +33,9 @@ class Team(models.Model):
     short_name = models.CharField(max_length=3)
     city = models.CharField(max_length=30)
     division = models.ForeignKey(Division, on_delete=None, related_name='teams')
-    wins = models.IntegerField(blank=True)
-    losses = models.IntegerField(blank=True)
+    wins = models.IntegerField(blank=True, null=True, default=0)
+    losses = models.IntegerField(blank=True, null=True, default=0)
+    api_id = models.CharField(max_length=30)
 
     @property
     def win_loss_percentage(self):
@@ -66,6 +61,11 @@ class Player(models.Model):
     dob = models.DateField(blank=True, null=True)
     pos = models.CharField(blank=True, null=True,
                            max_length=2, choices=POSITION_CHOICES)
+    height_feet = models.IntegerField(null=True)
+    height_inches = models.IntegerField(null=True)
+    weight = models.IntegerField(null=True)
+    years_pro = models.IntegerField(null=True)
+    api_id = models.CharField(max_length=30, default='')
 
     def name(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -99,9 +99,7 @@ class SeasonStats(models.Model):
     """
     # Relational info
     player = models.ForeignKey(Player, related_name='season_stats')
-    team = models.ForeignKey(Team, related_name='season_stats')
-    start = models.DateField(blank=True, null=True)
-    end = models.DateField(blank=True, null=True)
+    season_year = models.CharField(max_length=4)
     playoffs = models.BooleanField(default=False)
     # Stats
     gp = models.IntegerField(blank=True, null=True)  # games played
@@ -166,4 +164,4 @@ class SeasonStats(models.Model):
             return 0
 
     class Meta:
-        ordering = ('player__last_name', 'player__first_name', 'start')
+        ordering = ('player__last_name', 'player__first_name', 'season_year')
