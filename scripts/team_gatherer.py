@@ -45,13 +45,13 @@ def import_teams():
         'msg': 'Initializing team import'
     })
 
-    self.team_schema = TeamSchema(many=True, strict=True)
+    team_schema = TeamSchema(many=True, strict=True)
     team_request = requests.get(PLAYER_URL, REQUEST_ARGS)
 
     team_data = team_request.json()['league']['standard']
     nba_teams = [team for team in team_data if team['isNBAFranchise']]
 
-    teams = self.team_schema.load(nba_teams).data 
+    teams = team_schema.load(nba_teams).data
 
     teams_added = 0
     for team in teams:
