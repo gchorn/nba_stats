@@ -4,8 +4,9 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from players.models import Division, Player, SeasonStats, Team
-from players.serializers import (DivisionSerializer, PlayerSerializer, SeasonStatsSerializer,
-                                 TeamSerializer)
+from players.serializers import (
+    DivisionSerializer, PlayerSerializer, SeasonStatsSerializer,
+    TeamSerializer)
 
 
 class DivisionViewSet(viewsets.ModelViewSet):
@@ -28,7 +29,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
         names = player_query.split()
 
-        query = Q(first_name__icontains=names[0]) | Q(last_name__icontains=names[0])
+        query = Q(first_name__icontains=names[0]) | Q(
+            last_name__icontains=names[0])
         for name in names[1:]:
             query = query | (
                 Q(first_name__icontains=name) | Q(last_name__icontains=name)
