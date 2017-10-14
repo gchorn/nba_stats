@@ -1,3 +1,4 @@
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 
@@ -12,3 +13,5 @@ router.register(r'divisions', views.DivisionViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
 ]
+
+urlpatterns += staticfiles_urlpatterns()

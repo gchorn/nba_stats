@@ -21,4 +21,7 @@ COPY . /app
 
 WORKDIR /app
 
-CMD gunicorn -w 2 nba_stats.wsgi:application -b 0.0.0.0:8000
+# RUN python manage.py collectstatic --noinput
+
+# CMD gunicorn -w 1 nba_stats.wsgi:application -b 0.0.0.0:8000
+CMD python manage.py runserver 0.0.0.0:8000
