@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.logging_middleware.LoggingMiddleware',
+    # 'utils.logging_middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'nba_stats.urls'
@@ -129,6 +129,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/app/static/'
+
 
 LOGGING = {
     "version": 1,
