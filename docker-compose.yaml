@@ -2,13 +2,31 @@ version: '3'
 
 services:
   db:
+    restart: always
     image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
   web:
+    restart: always
     build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --no-input && gunicorn -w 2 nba_stats.wsgi:application -b 0.0.0.0:8000"
     volumes:
       - .:/app
-    ports:
-      - "8000:8000"
+      - static:/app/static
     depends_on:
       - db
+  nginx:
+    image: nginx:1.13.5
+    depends_on:
+      - web
+    restart: always
+    volumes:
+      - ./nginx/sites-enabled/django:/etc/nginx/conf.d/default.conf:ro
+      - static:/data/web/nba/static
+    ports:
+      - "80:80"
+
+
+volumes:
+  db-data:
+  static:
