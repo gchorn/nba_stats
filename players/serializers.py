@@ -15,7 +15,8 @@ class TeamSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('id', 'name', 'short_name', 'city', 'division', 'wins', 'losses', 'current_players')
+        fields = ('id', 'name', 'short_name', 'city', 'division', 'wins',
+                  'losses', 'current_players')
         depth = 1
 
 
