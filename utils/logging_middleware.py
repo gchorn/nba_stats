@@ -22,7 +22,11 @@ class LoggingMiddleware(object):
 
         request_time = datetime.now() - before_request
 
-        view_info = response.renderer_context['view']
+        try:
+            view_info = response.renderer_context.get('view')
+        except AttributeError:
+            view_info = None
+
         logger.info({
             'msg': 'Django app request',
             'request_id': request_id,
