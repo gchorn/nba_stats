@@ -7,15 +7,13 @@ from django.db import models
 getcontext().prec = 3
 
 POSITION_CHOICES = (
-    (u'PG', u'Point Guard'),
-    (u'SG', u'Shooting Guard'),
-    (u'SF', u'Small Forward'),
-    (u'PF', u'Power Forward'),
-    (u'C', u'Center'),
-    (u'G', u'Guard'),
-    (u'F', u'Forward'),
-    (u'GF', u'Guard-Forward'),
-    (u'FC', u'Forward-Center'),
+    ('C', 'Center'),
+    ('G', 'Guard'),
+    ('F', 'Forward'),
+    ('GF', 'Guard-Forward'),
+    ('FG', 'Forward-Guard'),
+    ('FC', 'Forward-Center'),
+    ('CF', 'Center-Forward')
 )
 
 
@@ -25,6 +23,9 @@ class Division(models.Model):
     conference = models.CharField(choices=[
         ('E', 'East'), ('W', 'West')
     ], max_length=1)
+
+    def __str__(self):
+        return self.name
 
 class Team(models.Model):
     """ A simple model to represent NBA teams and their win/loss record.
@@ -81,6 +82,9 @@ class Player(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def __str__(self):
+        return self.name()
 
     class Meta:
         ordering = ('last_name', 'first_name')

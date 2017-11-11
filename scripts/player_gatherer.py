@@ -18,12 +18,21 @@ REQUEST_ARGS = dict(
 
 teams = Team.objects.all()
 TEAM_MAP = {team.api_id: team.id for team in teams}
-
+POSITION_MAP = {
+    "Point Guard": "PG",
+    "Shooting Guard": "SG",
+    "Small Forward": "SF",
+    "Power Forward": "PF",
+    "Center": "C",
+    "Guard": "G",
+    "Forward": "F",
+    "Guard-Forward": "GF"
+}
 
 class PlayersSchema(Schema):
     first_name = fields.Str(load_from='firstName')
     last_name = fields.Str(load_from='lastName')
-    pos = fields.Str()
+    pos = fields.Method(deserialize='strip_hyphen')
     dob = fields.Method(load_from='dateOfBirthUTC', deserialize='load_date')
     height_feet = fields.Method(load_from='heightFeet', deserialize='cast_int')
     height_inches = fields.Method(load_from='heightInches', deserialize='cast_int')
@@ -31,6 +40,9 @@ class PlayersSchema(Schema):
     years_pro = fields.Method(load_from='yearsPro', deserialize='cast_int')
     current_team_id = fields.Method(load_from='teamId', deserialize='team_lookup')
     api_id = fields.String(load_from='personId')
+
+    def strip_hyphen(self, value):
+        return value.replace('-', '')
 
     def load_date(self, value):
         return datetime.strptime(value, "%Y-%m-%d").date()
