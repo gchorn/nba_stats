@@ -7,7 +7,7 @@ from players import views
 router = DefaultRouter(trailing_slash=False)
 router.register(r'players', views.PlayerViewSet)
 router.register(r'teams', views.TeamViewSet)
-router.register(r'season_stats', views.SeasonStatsViewSet)
+router.register(r'season-stats', views.SeasonStatsViewSet)
 router.register(r'divisions', views.DivisionViewSet)
 
 urlpatterns = [
