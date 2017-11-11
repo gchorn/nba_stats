@@ -24,7 +24,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
     serializer_class = PlayerSerializer
 
     @list_route()
-    def player_search(self, request):
+    def search(self, request):
         player_query = request.query_params.get('name', None)
 
         names = player_query.split()
