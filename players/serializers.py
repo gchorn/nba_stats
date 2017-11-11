@@ -4,6 +4,7 @@ from players.models import Division, Player, SeasonStats, Team
 
 
 class DivisionSerializer(serializers.HyperlinkedModelSerializer):
+    conference = serializers.CharField(source='get_conference_display', read_only=True)
 
     class Meta:
         model = Division
@@ -11,12 +12,26 @@ class DivisionSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
 
 
+class TeamDivisionSerializer(serializers.HyperlinkedModelSerializer):
+    conference = serializers.CharField(source='get_conference_display', read_only=True)
+
+    class Meta:
+        model = Division
+        fields = ('url', 'name', 'conference')
+
+
 class TeamSerializer(serializers.HyperlinkedModelSerializer):
+    choose_division = serializers.HyperlinkedRelatedField(
+        queryset=Division.objects.all(), 
+        view_name='division-detail', 
+        source='division',
+        write_only=True)
+    division = TeamDivisionSerializer(read_only=True)
 
     class Meta:
         model = Team
-        fields = ('id', 'name', 'short_name', 'city', 'division', 'wins',
-                  'losses', 'current_players')
+        fields = ('id', 'name', 'short_name', 'city', 'wins', 'division',
+                  'losses', 'current_players', 'choose_division')
         depth = 1
 
 
