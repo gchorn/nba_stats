@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'utils.logging_middleware.LoggingMiddleware',
+    'utils.logging_middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'nba_stats.urls'
@@ -142,8 +142,7 @@ LOGGING = {
     "version": 1,
     "formatters": {
         "json_format": {
-            "format": "%(asctime)s %(levelname)s %(funcName)s %(lineno)d "
-                      "%(pathname)s %(exc_info)s %(msg)s",
+            "format": "%(asctime)s %(levelname)s %(exc_info)s %(msg)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
             "()": "utils.json_log_formatter.PrettyJSONFormatter"
         }
