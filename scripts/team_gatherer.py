@@ -28,7 +28,7 @@ class TeamSchema(Schema):
         divisions = Division.objects.filter(name=in_data['divName'])
         if not divisions:
             division = Division(name=in_data['divName'],
-                                conference=in_data['confName'])
+                                conference=in_data['confName'][0])
             division.save()
         else:
             division = divisions[0]
