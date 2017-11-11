@@ -4,17 +4,21 @@ services:
   db:
     restart: always
     image: postgres
+    ports:
+      - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
   web:
     restart: always
     build: .
-    command: sh -c "python manage.py migrate && python manage.py collectstatic --no-input && gunicorn -w 2 nba_stats.wsgi:application -b 0.0.0.0:8000"
+    command: sh -c "gunicorn -w 2 nba_stats.wsgi:application -b 0.0.0.0:8000 --reload"
     volumes:
       - .:/app
       - static:/app/static
     depends_on:
       - db
+    stdin_open: true
+    tty: true
   nginx:
     image: nginx:1.13.5
     depends_on:
