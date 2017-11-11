@@ -21,7 +21,8 @@ COPY . /app
 
 WORKDIR /app
 
-# RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
+# RUN python manage.py makemigrations 
+# RUN python manage.py migrate && 
 
-# CMD gunicorn -w 1 nba_stats.wsgi:application -b 0.0.0.0:8000
-CMD python manage.py runserver 0.0.0.0:8000
+CMD gunicorn -w 2 nba_stats.wsgi:application -b 0.0.0.0:8000 --reload
