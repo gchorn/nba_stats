@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Counter from './Counter';
+import PlayerTable from './PlayerTable';
 
 document.addEventListener('DOMContentLoaded', function () {
     ReactDOM.render(
-        React.createElement(Counter),
+        React.createElement(PlayerTable),
         document.getElementById('mount')
     );
 });

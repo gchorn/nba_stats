@@ -1,0 +1,14 @@
+from node:alpine
+
+RUN pwd
+RUN ls -l
+RUN mkdir /src
+RUN ls -l
+COPY . /src
+RUN ls -l /src
+WORKDIR /src
+
+RUN npm install
+EXPOSE  3000
+
+CMD [ "npm", "start" ]

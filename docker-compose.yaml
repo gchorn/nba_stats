@@ -19,6 +19,17 @@ services:
       - db
     stdin_open: true
     tty: true
+
+  frontend:
+    volumes:
+      - ".:/src"
+    ports:
+      - "3000:3000"
+    build: 
+      context: .
+      dockerfile: Dockerfile_fe
+    command: sh -c "npm start"
+
   nginx:
     image: nginx:1.13.5
     depends_on:
