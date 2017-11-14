@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * A PlayerTable button: tap the button to increase the count.
+ * A table of NBA Players
  */
 class PlayerTable extends React.Component {
     constructor() {
@@ -38,7 +38,7 @@ class PlayerTable extends React.Component {
     render() {
         return (
             <div className="tableContainer">
-                <table className="playerTable">
+                <table className="playerTable highlight bordered">
                     <thead>
                         <tr>
                             <th>First Name</th>
@@ -56,13 +56,6 @@ class PlayerTable extends React.Component {
                     </tbody>
                 </table>
             </div>
-            // <button
-            //     onClick={() => {
-            //         this.setState({ count: this.state.count + 1 });
-            //     }}
-            // >
-            //     Count: {this.state.count}
-            // </button>
         );
     }
 }

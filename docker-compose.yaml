@@ -22,11 +22,11 @@ services:
 
   frontend:
     volumes:
-      - ".:/src"
+      - "./web:/web"
     ports:
       - "3000:3000"
-    build: 
-      context: .
+    build:
+      context: ./web
       dockerfile: Dockerfile_fe
     command: sh -c "npm start"
 
