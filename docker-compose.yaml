@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     restart: always
-    image: postgres
+    image: postgres:9.6
     ports:
       - "5432:5432"
     volumes:
@@ -22,13 +22,11 @@ services:
 
   frontend:
     volumes:
-      - "./web:/web"
+      - "./nba_fe:/web"
     ports:
       - "3000:3000"
-    build:
-      context: ./web
-      dockerfile: Dockerfile_fe
-    command: sh -c "npm start"
+    build: ./nba_fe
+    command: sh -c "pwd && ls -a"
 
   nginx:
     image: nginx:1.13.5
