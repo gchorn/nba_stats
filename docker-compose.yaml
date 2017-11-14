@@ -22,11 +22,13 @@ services:
 
   frontend:
     volumes:
-      - "./nba_fe:/web"
+      - "./nba_fe/public:/web/public"
+      - "./nba_fe/src:/web/src"
+      - "./nba_fe/package.json:/web/package.json"
     ports:
       - "3000:3000"
     build: ./nba_fe
-    command: sh -c "pwd && ls -a"
+    command: sh -c "npm start"
 
   nginx:
     image: nginx:1.13.5
