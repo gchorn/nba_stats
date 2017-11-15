@@ -1,12 +1,18 @@
 from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from players.models import Division, Player, SeasonStats, Team
 from players.serializers import (
     DivisionSerializer, PlayerSerializer, SeasonStatsSerializer,
     TeamSerializer)
+
+
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_query_param = 'page'
 
 
 class DivisionViewSet(viewsets.ModelViewSet):
@@ -22,22 +28,25 @@ class TeamViewSet(viewsets.ModelViewSet):
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
+    pagination_class = LargeResultsSetPagination
 
     @list_route()
     def search(self, request):
-        player_query = request.query_params.get('name', None)
-
-        names = player_query.split()
-
-        query = Q(first_name__icontains=names[0]) | Q(
-            last_name__icontains=names[0])
-        for name in names[1:]:
-            query = query | (
-                Q(first_name__icontains=name) | Q(last_name__icontains=name)
-            )
+        player_query = request.query_params.get('name')
 
         if player_query:
+            names = player_query.split()
+
+            query = Q(first_name__icontains=names[0]) | Q(
+                last_name__icontains=names[0])
+            for name in names[1:]:
+                query = query | (
+                    Q(first_name__icontains=name) | Q(last_name__icontains=name)
+                )
+
             player_matches = Player.objects.filter(query)
+        else:
+            player_matches = Player.objects.all()
 
         page = self.paginate_queryset(player_matches)
         if page is not None:
