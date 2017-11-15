@@ -1,0 +1,11 @@
+.ProgressBar-hidden {
+    visibility: hidden;
+}
+
+.Pagination-hidden {
+    visibility: hidden;
+}
+
+.pageTitle {
+    margin: 0;
+}
