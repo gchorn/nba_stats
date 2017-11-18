@@ -23,6 +23,7 @@ class DivisionViewSet(viewsets.ModelViewSet):
 class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
+    pagination_class = LargeResultsSetPagination
 
 
 class PlayerViewSet(viewsets.ModelViewSet):

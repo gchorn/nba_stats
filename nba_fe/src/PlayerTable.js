@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Col, Input, Pagination, ProgressBar, Row} from 'react-materialize'
+import {Col, Pagination, ProgressBar, Row} from 'react-materialize'
 import './PlayerTable.css';
 
 var _ = require('lodash')
@@ -9,8 +9,6 @@ class PlayerTable extends Component {
   constructor() {
     super();
     this.changePage = this.changePage.bind(this);
-    this.playerSearchUpdate = this.playerSearchUpdate.bind(this);
-    this.playerSearchInputChanged = this.playerSearchInputChanged.bind(this);
     this.state = {
       players: [],
       pages: 0,
@@ -25,8 +23,8 @@ class PlayerTable extends Component {
     this.setState({ loading: null });
 
     let fetchUrl = 'http://localhost/players?format=json&page=' + this.state.page
-    if (this.state.searchValue) {
-      fetchUrl = 'http://localhost/players/search?format=json&name=' + this.state.searchValue
+    if (this.props.searchValue) {
+      fetchUrl = 'http://localhost/players/search?format=json&name=' + this.props.searchValue
     }
 
     fetch(fetchUrl)
@@ -51,10 +49,8 @@ class PlayerTable extends Component {
         if (this.state.pages !== pageNum) {
           this.setState({ pages: pageNum });
           if (pageNum === 0) {
-            console.log('hiding pagination!')
             this.setState({ pagination: 'Pagination-hidden' });
           } else {
-            console.log('showing pagination!')
             this.setState({ pagination: null });
           }
         }
@@ -67,21 +63,12 @@ class PlayerTable extends Component {
     this.setState({ page: pageNumber });
   }
 
-  playerSearchInputChanged(event, value) {
-    this.handleSearchDebounced(value);
-  }
-
-  playerSearchUpdate(value) {
-    this.setState({ searchValue: value });
-  }
-
   componentWillMount() {
-    this.handleSearchDebounced = _.debounce(this.playerSearchUpdate, 350);
     this.fetchPlayers();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.page !== prevState.page || this.state.searchValue !== prevState.searchValue) {
+    if (this.state.page !== prevState.page || this.props.searchValue !== prevProps.searchValue) {
       this.fetchPlayers();
     }
   }
@@ -90,10 +77,11 @@ class PlayerTable extends Component {
     return (
       <div className="tableContainer">
         <Row>
-          <Col s={7}><h1 className="pageTitle">NBA Players</h1></Col>
-          <Input placeholder="Search players by name" s={5} onChange={this.playerSearchInputChanged}/>
+          <Col s={8}><h1 className="pageTitle">NBA Players</h1></Col>
+          <Col s={4}
+            ><Pagination className={"tablePaginator " + this.state.pagination} items={this.state.pages} activePage={this.state.page} maxButtons={8} onSelect={this.changePage} />
+          </Col>
         </Row>
-        <Pagination className={"tablePaginator "+ this.state.pagination} items={this.state.pages} activePage={this.state.page} maxButtons={8} onSelect={this.changePage}/>
         <ProgressBar className={this.state.loading}/>
         <table className="playerTable highlight bordered">
           <thead>
