@@ -25,7 +25,7 @@ class PlayerTable extends Component {
     this.setState({ loading: null });
 
     let fetchUrl = 'http://localhost/players?format=json&page=' + this.state.page
-    if (this.state.searchValue != null) {
+    if (this.state.searchValue) {
       fetchUrl = 'http://localhost/players/search?format=json&name=' + this.state.searchValue
     }
 
