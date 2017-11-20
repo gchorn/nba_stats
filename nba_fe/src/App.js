@@ -53,13 +53,15 @@ class App extends Component {
       e.preventDefault();
       let newViews = this.changeView(this.state.views, e.target.id);
       this.setState({ views: newViews });
+      this.setState({ playerId: null });
+      this.setState({ searchValue: null });
   }
 
   onPlayerSelect(playerId) {
     this.setState({ playerId: playerId });
     let newViews = this.changeView(this.state.views, 'PlayerDetail');
     this.setState({ views: newViews });
-
+    this.setState({ searchValue: null });
   }
 
   render() {
