@@ -11,7 +11,7 @@ from players.serializers import (
 
 
 class LargeResultsSetPagination(PageNumberPagination):
-    page_size = 100
+    page_size = 50
     page_query_param = 'page'
 
 
