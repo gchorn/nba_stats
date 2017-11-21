@@ -13,10 +13,13 @@ class App extends Component {
     this.playerSearchUpdate = this.playerSearchUpdate.bind(this);
     this.playerSearchInputChanged = this.playerSearchInputChanged.bind(this);
     this.onPlayerSelect = this.onPlayerSelect.bind(this);
+    this.onTeamSelect = this.onTeamSelect.bind(this);
     this.navBarSelect = this.navBarSelect.bind(this);
     this.state = {
         searchValue: null,
         playerId: null,
+        teamId: null,
+        tableTitle: 'NBA Players',
         views: {
             Players: true,
             Teams: false,
@@ -24,13 +27,14 @@ class App extends Component {
         }
     };
   }
-  
+
   playerSearchInputChanged(event, value) {
       this.handleSearchDebounced(value);
   }
 
   playerSearchUpdate(value) {
       this.setState({ searchValue: value });
+      this.setState({ tableTitle: 'Search Results' });
   }
 
   componentWillMount() {
@@ -51,6 +55,10 @@ class App extends Component {
 
   navBarSelect(e) {
       e.preventDefault();
+      if (e.target.id === 'Players') {
+        this.setState({ tableTitle: 'NBA Players'});
+        this.setState({ teamId: null });
+      }
       let newViews = this.changeView(this.state.views, e.target.id);
       this.setState({ views: newViews });
       this.setState({ playerId: null });
@@ -64,6 +72,14 @@ class App extends Component {
     this.setState({ searchValue: null });
   }
 
+  onTeamSelect(teamId, teamName) {
+    this.setState({ teamId: teamId });
+    this.setState({ tableTitle: teamName + ' Players' });
+    let newViews = this.changeView(this.state.views, 'Players');
+    this.setState({ views: newViews });
+    this.setState({ searchValue: null });
+  }
+
   render() {
     return (
       <div className="appContainer">
@@ -71,7 +87,7 @@ class App extends Component {
             <div className="nav-wrapper">
                     <a href="" className="brand-logo"><img src="https://vignette.wikia.nocookie.net/logopedia/images/4/4c/NBA_Horizontal_Logo_.svg/revision/latest?cb=20160207144301" className="NBALogo" alt="NBA"/></a>
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    { this.state.views.Players 
+                    { this.state.views.Players
                         ? <li><Input className="playerSearch" placeholder="Search all players" onChange={this.playerSearchInputChanged} /></li>
                         : null
                     }
@@ -82,12 +98,12 @@ class App extends Component {
         </nav>
             {
                 this.state.views.Players
-                    ? <PlayerTable searchValue={this.state.searchValue} onPlayerSelect={this.onPlayerSelect}/>
+                    ? <PlayerTable searchValue={this.state.searchValue} onPlayerSelect={this.onPlayerSelect} teamId={this.state.teamId} tableTitle={this.state.tableTitle}/>
                     : null
             }
             {
                 this.state.views.Teams
-                    ? <TeamTable />
+                    ? <TeamTable onTeamSelect={this.onTeamSelect}/>
                     : null
             }
             {

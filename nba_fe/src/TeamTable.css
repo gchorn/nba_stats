@@ -15,3 +15,7 @@
     margin: 2em auto;
     max-width: 60em;
 }
+
+.teamRow {
+    cursor: pointer;
+}

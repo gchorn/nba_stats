@@ -3,7 +3,6 @@ import {Col, Pagination, ProgressBar, Row} from 'react-materialize'
 import './PlayerTable.css';
 
 var _ = require('lodash')
-var pageSize = 100;
 
 class PlayerTable extends Component {
   constructor() {
@@ -25,6 +24,8 @@ class PlayerTable extends Component {
     let fetchUrl = 'http://localhost/players?format=json&page=' + this.state.page
     if (this.props.searchValue) {
       fetchUrl = 'http://localhost/players/search?format=json&name=' + this.props.searchValue
+    } else if (this.props.teamId) {
+      fetchUrl = 'http://localhost/players/search?format=json&teamId=' + this.props.teamId
     }
 
     fetch(fetchUrl)
@@ -45,10 +46,11 @@ class PlayerTable extends Component {
             </tr>
           )
         })
-        let pageNum = _.ceil(data.count/pageSize);
+        let pageNum = _.ceil(data.count/data.results.length);
+
         if (this.state.pages !== pageNum) {
           this.setState({ pages: pageNum });
-          if (pageNum === 0) {
+          if (pageNum <= 1) {
             this.setState({ pagination: 'Pagination-hidden' });
           } else {
             this.setState({ pagination: null });
@@ -68,7 +70,7 @@ class PlayerTable extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.page !== prevState.page || this.props.searchValue !== prevProps.searchValue) {
+    if (this.state.page !== prevState.page || this.props.searchValue !== prevProps.searchValue || this.props.teamId !== prevProps.teamId) {
       this.fetchPlayers();
     }
   }
@@ -77,8 +79,8 @@ class PlayerTable extends Component {
     return (
       <div className="tableContainer">
         <Row>
-          <Col s={8}><h1 className="pageTitle">NBA Players</h1></Col>
-          <Col s={4}
+          <Col s={7}><h1 className="pageTitle">{this.props.tableTitle}</h1></Col>
+          <Col s={5}
             ><Pagination className={"tablePaginator " + this.state.pagination} items={this.state.pages} activePage={this.state.page} maxButtons={8} onSelect={this.changePage} />
           </Col>
         </Row>

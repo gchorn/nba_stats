@@ -23,7 +23,7 @@ class TeamTable extends Component {
       }).then(data => {
         let teams = data.results.map((tm) => {
           return (
-            <tr key={tm.id}>
+            <tr className="teamRow" key={tm.id} onClick={() => this.props.onTeamSelect(tm.id, tm.name)}>
               <td>{tm.name}</td>
               <td>{tm.short_name}</td>
               <td>{tm.city}</td>
