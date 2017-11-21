@@ -33,10 +33,12 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     @list_route()
     def search(self, request):
-        player_query = request.query_params.get('name')
+        name_query = request.query_params.get('name')
+        team_query = request.query_params.get('team')
+        team_id_query = request.query_params.get('teamId')
 
-        if player_query:
-            names = player_query.split()
+        if name_query:
+            names = name_query.split()
 
             query = Q(first_name__icontains=names[0]) | Q(
                 last_name__icontains=names[0])
@@ -46,6 +48,13 @@ class PlayerViewSet(viewsets.ModelViewSet):
                 )
 
             player_matches = Player.objects.filter(query)
+        elif team_query:
+            query = Q(current_team__name__icontains=team_query) | Q(
+                current_team__short_name__icontains=team_query)
+            player_matches = Player.objects.filter(query)
+        elif team_id_query:
+            query = Q(current_team__id__exact=team_id_query)
+            player_matches = Player.objects.filter(query)
         else:
             player_matches = Player.objects.all()
 
@@ -54,7 +63,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(player_query, many=True)
+        serializer = self.get_serializer(name_query, many=True)
         return Response(serializer.data)
 
 
