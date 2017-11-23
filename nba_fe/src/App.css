@@ -11,3 +11,8 @@
     position: relative;
     top: 0.19em;
 }
+
+.pageTitle {
+    margin: 0;
+    font-size: 4em;
+}
